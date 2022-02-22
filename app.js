@@ -35,16 +35,18 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cookieParser(process.env.COOKIE_SECRET));
+
+// passport module code
+app.use(cookieParser('ThisisSecret'));
 
 app.use(
    session({
       resave: false,
       saveUninitialized: false,
-      secret: process.env.COOKIE_SECRET,
+      secret: 'ThisisSecret',
       cookie: {
          httpOnly: true,
-         secure: false, //https가 아닌 환경에서도 사용, 배포 시에는 https를 적용하고 secure도 true로 설정하는 것이 좋다
+         secure: false, //https가 아닌 환경에서도 사용, 그러나 배포 시에는 https를 적용하고 secure도 true로 설정하는 것이 좋다
       },
    }),
 );
@@ -55,9 +57,10 @@ app.use(passport.session()); // req.session 객체에 passport정보를 추가 �
 // passport.session()이 실행되면, 세션쿠키 정보를 바탕으로 해서 passport/index.js의 deserializeUser()가 실행하게 한다.
 
 //* 라우터
-app.use('/auth', authRouter);
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('../routes/auth', authRouter);
+app.use('../routes/index', indexRouter);
+app.use('../routes/users', usersRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -2,7 +2,7 @@
 
 exports.isLoggedIn = (req, res, next) => {
   // isAuthenticated()로 검사해 로그인이 되어있으면
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated()) { //로그인 중이면 req.isAuthenticated()가 true이고 아니면 false이다.
      next(); // 다음 미들웨어
   } else {
      res.status(403).send('로그인 필요합니다.');

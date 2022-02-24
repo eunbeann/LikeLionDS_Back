@@ -23,8 +23,10 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
    try {
       // 기존에 이메일로 가입한 사람이 있나 검사 (중복 가입 방지)
       const exUser = await User.findOne({ where: { email } });
-      if (exUser) {
-         return res.redirect('/join?error=exist'); // 에러페이지로 바로 리다이렉트
+      if (exUser) 
+      {
+        console.log('join Error : 이미 가입된 이메일입니다.');
+         return res.redirect('/join'); // 리다이렉트
       }
 
       // 정상적인 회원가입 절차면 해시화
@@ -38,7 +40,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
       });
 
       return res.redirect('/');
-   } catch (error) {
+   }catch (error) {
       console.error(error);
       return next(error);
    }
@@ -47,11 +49,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
 //* 로그인 요청
 // 사용자 미들웨어 isNotLoggedIn 통과해야 async (req, res, next) => 미들웨어 실행
 router.post('/login', isNotLoggedIn, (req, res, next) => {
-  //? local로 실행이 되면 localstrategy.js를 찾아 실행한다.
   passport.authenticate('local', (authError, user, info) => {
-     //? (authError, user, info) => 이 콜백 미들웨어는 localstrategy에서 done()이 호출되면 실행된다.
-     //? localstrategy에 done()함수에 로직 처리에 따라 1,2,3번째 인자에 넣는 순서가 달랐는데 그 이유가 바로 이것이다.
-
      // done(err)가 처리된 경우
      if (authError) {
         console.error(authError);
@@ -62,7 +60,6 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
         // done()의 3번째 인자 { message: '비밀번호가 일치하지 않습니다.' }가 실행
         return res.redirect(`/?loginError=${info.message}`);
      }
-
      //? 로그인이 성공되면 (user가 false가 아닌 경우), passport/index.js로 가서 실행시킨다.
      return req.login(user, loginError => {
         //? loginError => 미들웨어는 passport/index.js의 passport.deserializeUser((id, done) => 가 done()이 되면 실행하게 된다.

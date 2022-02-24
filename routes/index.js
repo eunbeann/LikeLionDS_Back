@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-/* 로그인, 로그아웃 */
+/* 로그인, 로그아웃, 회원가입 */
 router.post('/login',
 	passport.authenticate('local', { failureRedirect: '/auth' }),
 	(req, res) => {
@@ -29,5 +29,13 @@ router.get('/logout', async (req, res) => {
 		res.redirect(req.headers.referer);
 	}
 });
+
+router.post('/join',
+	passport.authenticate('local', { failureRedirect: '/auth' }),
+	(req, res) => {
+		res.redirect('/');
+    res.send('회원가입 성공! post로 받음!');
+	}
+);
 
 module.exports = router;

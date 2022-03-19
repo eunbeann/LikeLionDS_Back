@@ -14,7 +14,7 @@ router.get('/studies/:id', async(req,res) => {
     res.json(study);
 });
 
-router.post("/", validateToken, async(req,res) => {
+router.post("/", async(req,res) => {
     const study = req.body;
     await Study.create(study);
     res.json(study);

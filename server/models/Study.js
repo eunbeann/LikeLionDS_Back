@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        img:{
+            type: DataTypes.BLOB("long"),
+            allowNull: true,
+        }
     });
 
     return Study;
